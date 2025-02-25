@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function SelectTreatment() {
-  const searchParams = useSearchParams();
-  const treatmentId = searchParams.get("treatmentId");
-
+export default function SelectTreatment({ treatmentId }) {
   const pathname = usePathname();
   const { replace } = useRouter();
+  const searchParams = useSearchParams();
 
   const [treatments, setTreatments] = useState("");
   const [uniqueTypes, setUniqueTypes] = useState([]);
@@ -44,7 +42,7 @@ export default function SelectTreatment() {
     if (newSelectedId) {
       params.set("treatmentId", newSelectedId);
     } else {
-      params.delete("treatmentId", newSelectedId);
+      params.delete("treatmentId");
     }
 
     replace(`${pathname}?${params.toString()}`);

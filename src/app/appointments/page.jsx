@@ -1,12 +1,18 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
 import SelectTreatment from "@/components/select-treatment/SelectTreatment";
 import CalendarPersonalize from "@/components/calendar-personalize/CalendarPersonalize";
 import TimeTreatment from "@/components/time-treatment/TimeTreatment";
 
 export const PageAppointments = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const searchParams = useSearchParams();
+  const treatmentId = searchParams.get("treatmentId");
+  const date = searchParams.get("date");
+
+  const [selectedDate, setSelectedDate] = useState(date || null);
 
   const handleSumbit = async (e) => {
     // e.preventDefault();
@@ -21,29 +27,29 @@ export const PageAppointments = () => {
     //   }
   };
 
-  const fetchTimeAppointments = async () => {
-    try {
-      const response = fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/time-appointments`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            //treatmentId,
-            selectedDate,
-          }),
-        }
-      );
-      if (!response.ok) throw new Error("Error al reservar el tratamiento.");
-      return;
-    } catch (error) {}
-  };
+  // const fetchTimeAppointments = async () => {
+  //   try {
+  //     const response = fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/time-appointments`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           treatmentId,
+  //           selectedDate,
+  //         }),
+  //       }
+  //     );
+  //     if (!response.ok) throw new Error("Error al reservar el tratamiento.");
+  //     return;
+  //   } catch (error) {}
+  // };
 
-  useEffect(() => {
-    fetchTimeAppointments();
-  }, [selectedDate]);
+  // useEffect(() => {
+  //   fetchTimeAppointments();
+  // }, [selectedDate]);
 
   return (
     <form
@@ -52,7 +58,7 @@ export const PageAppointments = () => {
     >
       <h1 className="text-4xl font-bold my-10">Reserva tú tratamiento</h1>
       <h2 className="mb-3">Selecciona un tratamiento</h2>
-      <SelectTreatment />
+      <SelectTreatment treatmentId={treatmentId} />
       <div className="my-10">
         <h3 className="text-center mb-3">Fecha y hora</h3>
         <CalendarPersonalize onChange={setSelectedDate} value={selectedDate} />
